@@ -1,17 +1,11 @@
-class User():
+from user import *
 
-    def __init__(self, nome, telefone, empresa):
-        self.nome = nome
-        self.telefone = telefone
-        self.empresa = empresa
+lista = User.cria_usuarios('teste.csv')
+print('Usuários cadastrados com sucesso!')
+tamanho_lista = len(lista)
+i = 0
+while i < tamanho_lista:
+    print(lista[i].nome)
+    i+=1
 
-    @staticmethod
-    def cria_usuarios(nome_arquivo):
-        users = []
-        arquivo = open(nome_arquivo, 'r')
-        for user in arquivo:
-            valores = user.split(',')
-            users.append(User(*valores))
-            print(users)
-        arquivo.close()
-        return users
+
