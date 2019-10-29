@@ -8,4 +8,3 @@ while i < tamanho_lista:
     print(lista[i].nome)
     i+=1
 
-
