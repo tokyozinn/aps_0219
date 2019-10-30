@@ -24,10 +24,7 @@ while(escolha != "0"):
     elif escolha == "2":
         novo = input('Você é fornecedor novo? [Y] or [N]')
         if novo == "Y" or "y":
-            nome = input('Qual seu nome?')
-            telefone = input('Qual seu telefone?')
-            empresa = input('Qual sua empresa?')
-            Fornecedor.__init__(Fornecedor, nome=nome, telefone=telefone, empresa=empresa)
+            Fornecedor.adiciona(Fornecedor)
         else:
             Fornecedor.altera_cadastro()
     elif escolha == "3":
