@@ -5,8 +5,11 @@ from cliente import *
 escolha = ""
 while(escolha != "0"):
 
-    Fornecedor.lista_de_fornecedores = []
-    Fornecedor.cria_usuarios('fornecedores.csv')
+    try:
+        Fornecedor.lista_de_fornecedores = []
+        Fornecedor.cria_usuarios('fornecedores.csv')
+    except:
+        Fornecedor.limpa_arquivo(Fornecedor, 'fornecedores.csv')
 
     escolha = input("""Você deseja:
                     \n- [1] Procurar locais de descarte;
