@@ -5,16 +5,19 @@ class Fornecedor(User):
 
     lista_de_fornecedores = []
     
-    def __init__(self, nome, telefone, empresa, endereco, regiao):
+    def __init__(self, nome, telefone, empresa, endereco, regiao, id):
         super(Fornecedor, self).__init__(nome, telefone)
+        self.id = id
         self.empresa = empresa
         self.endereco = endereco
         self.regiao = regiao
     
-    def altera_cadastro(self, nome, telefone, empresa):
-        self.nome = nome
-        self.telefone = telefone
-        self.empresa = empresa
+    def altera_cadastro(self, id, nome, telefone, empresa):
+        for x in lista_de_fornecedores:
+            if (x.id ==  id):
+                self.nome = nome
+                self.telefone = telefone
+                self.empresa = empresa
         
     @classmethod    
     def cria_usuarios(cls ,nome_arquivo):
@@ -36,8 +39,9 @@ class Fornecedor(User):
         empresa = input('Empresa nova: ')
         endereco = input('Endereço: ')
         regiao = input('Região: ')
+        id = len(Fornecedor.lista_de_fornecedores) + 1
         arquivo = open('fornecedores.csv', 'a')
-        arquivo.write(f'{nome}, {telefone}, {empresa}, {endereco}, {regiao}\r')
+        arquivo.write(f'{nome}, {telefone}, {empresa}, {endereco}, {regiao}, {id}\r')
         arquivo.close()
 
     def listar_filtrado(self, regiao_informada):
@@ -48,3 +52,16 @@ class Fornecedor(User):
             i += 1
             continue
 
+    def limpa_arquivo(cls, nome_arquivo):
+        arquivo_erro = open('fornecedores.csv', 'r')
+        texto_com_erro = arquivo_erro.read()
+        arquivo_erro.close()
+
+        
+        arquivo_backup = open('erros.csv', 'w')
+        arquivo_backup.write(texto_com_erro)
+        arquivo_backup.close()
+
+        arquivo_novo = open('fornecedores.csv', 'w')
+        arquivo_novo.write('')
+        arquivo_novo.close()
