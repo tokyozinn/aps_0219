@@ -1,45 +1,64 @@
-from user import *
 from fornecedor import *
-from cliente import *
+import re
 
-escolha = ""
-while(escolha != "0"):
-
-    try:
-        Fornecedor.lista_de_fornecedores = []
-        Fornecedor.cria_usuarios('fornecedores.csv')
-    except:
-        Fornecedor.limpa_arquivo(Fornecedor, 'fornecedores.csv')
-
+def menu_de_escolha():
     escolha = input("""Você deseja:
                     \n- [1] Procurar locais de descarte;
                     \n- [2] Acessar como fornecedor   
                     \n- [3] Acessar como admin
                     \n- [0] Fechar
                     \n>>> """)
+    return escolha
+
+def mensagem_entrada_cliente(nome):
+    print(f'Bem-vindo {nome}! Nosso programa te mostra os pontos de descarte mais próximos de você!')
+    print('Nós cobrimos as regiões do Swift, Taquaral, Barão Geraldo, Vila Industrial, Campo Grande e Centro!')
+
+def cria_lista_fornecedores(arquivo):
+    
+    try:
+        lista = Fornecedor.lista_de_fornecedores = []
+        Fornecedor.cria_usuarios(Fornecedor, arquivo, lista)
+    except:
+        Fornecedor.limpa_arquivo(Fornecedor, arquivo)
+
+escolha = ""
+while(escolha != "0"):
+
+    cria_lista_fornecedores('fornecedores.csv')
+
+    escolha = menu_de_escolha()
 
     if escolha == "1":
+        nome = input('Qual seu nome? >>> ')
+
         while escolha == "1":
-            regiao = input('Digite em qual região de Campinas quer encontrar pontos de descarte: ')
-            print(f'*******\n\nProcurando locais de descarte na região {regiao}...\n\n********\n')
-            Fornecedor.listar_filtrado(Fornecedor, regiao)
+            
+            mensagem_entrada_cliente(nome)
+            bairro = Fornecedor.captura_bairro(Fornecedor)
+            if "!!" not in bairro:
+                print(f'\nProcurando locais de descarte na região {bairro}...\n')
+            else:
+                print('****************ERRO NA RESPOSTA****************')
+                break
+            Fornecedor.listar_filtrado(Fornecedor, bairro)
             print('Deseja procurar outra região?')
             escolha = input("""\n- [1] SIM
                                \n- [0] FECHAR >>> """)
     elif escolha == "2":
-        novo = input("""Você é fornecedor novo?\n 
+        novo = input("""Você é fornecedor novo? 
                         \n- [Y] SIM 
-                        \n- [N] NÃO""")
-        if novo == "Y" or "y":
+                        \n- [N] NÃO >>> """)
+        if novo == "Y" or novo == 'y':
             Fornecedor.adiciona(Fornecedor)
         else:
-            Fornecedor.altera_cadastro()
+            Fornecedor.altera_cadastro(Fornecedor)
     elif escolha == "3":
         print('Acessando como admin...')
         escolha_do_adm = input("""Você deseja 
                                 \n- [1] Listar fornecedores
                                 \n- [2] Adicionar fornecedor
-                                \n- [3] Remover fornecedor""")
+                                \n- [3] Remover fornecedor >>> """)
         if escolha_do_adm == "1":
             Fornecedor.listar(Fornecedor)
         elif escolha_do_adm == "2":
@@ -48,8 +67,6 @@ while(escolha != "0"):
             Fornecedor.remove()
         else:
             continue
-
-
 
 print("\n!!!!!!!!!!!!!!!!!!!\nFechando programa...\n!!!!!!!!!!!!!!!!!!!")
 
