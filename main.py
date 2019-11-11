@@ -23,6 +23,7 @@ def cria_lista_fornecedores(arquivo):
         Fornecedor.limpa_arquivo(Fornecedor, arquivo)
 
 escolha = ""
+
 while(escolha != "0"):
 
     cria_lista_fornecedores('fornecedores.csv')
@@ -30,12 +31,15 @@ while(escolha != "0"):
     escolha = menu_de_escolha()
 
     if escolha == "1":
+
         nome = input('Qual seu nome? >>> ')
 
         while escolha == "1":
             
             mensagem_entrada_cliente(nome)
+
             bairro = Fornecedor.captura_bairro(Fornecedor)
+
             if "!!" not in bairro:
                 print(f'\nProcurando locais de descarte na região {bairro}...\n')
             else:

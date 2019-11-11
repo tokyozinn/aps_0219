@@ -21,7 +21,7 @@ class Fornecedor:
             return lista
 
     def altera_cadastro(self):
-        id = input('Qual seu id?')
+        id = input('Qual seu id? >>> ')
         print(Fornecedor.lista_de_fornecedores[0])
         for x in Fornecedor.lista_de_fornecedores:
             if (x.id == id):
@@ -44,43 +44,44 @@ class Fornecedor:
         print('Executando remove')
 
     def captura_bairro(self):
-        bairro = input("""Bairro: 
-            \r[1] - Swift
-            \r[2] - Centro
-            \r[3] - Taquaral
-            \r[4] - Barão Geraldo
-            \r[5] - Vila Industrial
-            \r[6] - Campo Grande >>> """)
 
-        if bairro == "1":
-            bairro = "swift"
-        elif bairro == "2":
-            bairro = "centro"
-        elif bairro == "3":
-            bairro = "taquaral"
-        elif bairro == "4":
-            bairro = "barão geraldo"
-        elif bairro == "5":
-            bairro = "vila industrial"
-        elif bairro == "6":
-            bairro = "campo grande"
-        else:
-            bairro = "!!"
-        return bairro
+        bairro = ''
+        while bairro == '':
+            bairro = input("""Bairro: 
+                \r[1] - Swift
+                \r[2] - Centro
+                \r[3] - Taquaral
+                \r[4] - Barão Geraldo
+                \r[5] - Vila Industrial
+                \r[6] - Campo Grande >>> """)
+
+            if bairro == "1":
+                bairro = "swift"
+            elif bairro == "2":
+                bairro = "centro"
+            elif bairro == "3":
+                bairro = "taquaral"
+            elif bairro == "4":
+                bairro = "barão geraldo"
+            elif bairro == "5":
+                bairro = "vila industrial"
+            elif bairro == "6":
+                bairro = "campo grande"
+            else:
+                bairro = ''
+        return bairro.title()
 
     def adiciona(self):
         nome = input('Nome novo: ')
         telefone = input('Telefone novo: ')
         empresa = input('Empresa nova: ')
-        id = str(len(Fornecedor.lista_de_fornecedores) + 1)
-        bairro = Fornecedor.captura_bairro()
-
-
+        id = f"00{str(len(Fornecedor.lista_de_fornecedores) + 1)}"
+        bairro = Fornecedor.captura_bairro(self)
         endereco = input('Endereço: ')
         with open('fornecedores.csv', 'a') as arquivo:
             arquivo.write(f'{nome}, {telefone}, {empresa}, {id}, {bairro}, {endereco}\r')
             arquivo.close()
-        print()
+        print(f"\nParabéns {nome}! Seu cadastro foi realizado com sucesso! Seu id é: {id}\n")
 
     def listar_filtrado(self, bairro_informado):
         i = 0
