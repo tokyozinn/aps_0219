@@ -1,47 +1,67 @@
 import re
+import csv
 
 class Fornecedor:
     
-    def __init__(self, nome, telefone, empresa, id, bairro, endereco):
+    def __init__(self, chave_id, nome, telefone, empresa, bairro, endereco):
+        self.chave_id = chave_id
         self.nome = nome
         self.telefone = telefone
         self.empresa = empresa
-        self.id = id
         self.bairro = bairro
         self.endereco = endereco
     
     def cria_usuarios(self, nome_arquivo, lista):
-            arquivo = open(nome_arquivo, 'r')
-            i = 0
-            for user in arquivo:
-                valores = user.split(',')
-                lista.append(self(*valores))
-                i += 1
+            with open(nome_arquivo, 'r') as arquivo:
+                for user in arquivo:
+                    valores = user.split(',')
+                    if user != "\n":
+                        lista.append(self(*valores))
             arquivo.close()
             return lista
 
-    def altera_cadastro(self):
-        id = input('Qual seu id? >>> ')
-        print(Fornecedor.lista_de_fornecedores[0])
-        for x in Fornecedor.lista_de_fornecedores:
-            if (x.id == id):
-                print('bataaaaaaaaaaaaaaaaaaaataaaaaaaaaaaaa')
-                x.nome = input('nome novo')
-                x.telefone = input('telefone novo')
-                x.empresa = input('empresa nova')
-            else:
-                print('batatinha quando nasce............')
+    def altera_cadastro(self, lista):
+        id_a_alterar = input('Qual seu ID? >>> ')
+        i = 0
+        achou = False
+        while i < len(lista):
+            if id_a_alterar == lista[i].chave_id:
+                lista[i].nome = input("Nome novo >>> ")
+                lista[i].telefone = input("Telefone novo >>> ")
+                lista[i].empresa = input("Empresa nova >>> ")
+                lista[i].bairo = lista[i].captura_bairro()
+                lista[i].endereco = input("Endereço novo >>> ") + "\n"
+                achou = True
+            i += 1
+        if achou:
+            with open('fornecedores.csv', 'w') as f:
+                for item in lista:
+                    f.write(f'{item.chave_id},{item.nome},{item.telefone},{item.empresa},{item.bairro},{item.endereco}') 
+        print(lista)
  
     def listar(self):
         i = 0
         while i < len(Fornecedor.lista_de_fornecedores):
-            print(Fornecedor.lista_de_fornecedores[i].nome, 
-                    Fornecedor.lista_de_fornecedores[i].empresa,
-                    Fornecedor.lista_de_fornecedores[i].id)
-            i += 1 
+            print(f"""ID -> {Fornecedor.lista_de_fornecedores[i].chave_id} Empresa -> {Fornecedor.lista_de_fornecedores[i].empresa}\n""")
 
-    def remove(self):
-        print('Executando remove')
+            i += 1     
+    
+    def remove(self, lista):
+
+        id_a_remover = input('Digite o ID do fornecedor que deseja remover >>> ')
+        i = 0
+        achou = False
+        while i < len(lista):
+            if lista[i].chave_id == id_a_remover:
+                print(i)
+                lista.pop(i)
+                achou = True
+            i += 1
+        if achou:
+            with open('fornecedores.csv', 'w') as f:
+                for item in lista:
+                    f.write(f'{item.chave_id},{item.nome},{item.telefone},{item.empresa},{item.bairro},{item.endereco}') 
+        print(lista)
 
     def captura_bairro(self):
 
@@ -75,23 +95,33 @@ class Fornecedor:
         nome = input('Nome novo: ')
         telefone = input('Telefone novo: ')
         empresa = input('Empresa nova: ')
-        id = f"00{str(len(Fornecedor.lista_de_fornecedores) + 1)}"
+        chave_id = 1
+        for user in Fornecedor.lista_de_fornecedores:
+            id_auxiliar = int(user.chave_id)
+            if  id_auxiliar >= chave_id:
+                chave_id =  id_auxiliar + 1
+        
         bairro = Fornecedor.captura_bairro(self)
         endereco = input('Endereço: ')
         with open('fornecedores.csv', 'a') as arquivo:
-            arquivo.write(f'{nome}, {telefone}, {empresa}, {id}, {bairro}, {endereco}\r')
+            arquivo.write(f'{chave_id},{nome},{telefone},{empresa},{bairro},{endereco}\r')
             arquivo.close()
-        print(f"\nParabéns {nome}! Seu cadastro foi realizado com sucesso! Seu id é: {id}\n")
+        print(f"\nParabéns {nome}! Seu cadastro foi realizado com sucesso! Seu ID é: {chave_id}\n")
 
     def listar_filtrado(self, bairro_informado):
         i = 0
         while i < len(Fornecedor.lista_de_fornecedores):
+
             if re.search(bairro_informado, Fornecedor.lista_de_fornecedores[i].bairro, re.IGNORECASE):
-                print(Fornecedor.lista_de_fornecedores[i].nome)
-            i += 1
+                empresa = Fornecedor.lista_de_fornecedores[i].empresa
+                telefone = Fornecedor.lista_de_fornecedores[i].telefone
+                endereco = Fornecedor.lista_de_fornecedores[i].endereco
+                print(f"""Empresa -> {empresa}\nTelefone -> {telefone}\nEndereço -> {endereco}\n""")
+            i += 1    
             continue
 
     def limpa_arquivo(cls, nome_arquivo):
+
         arquivo_erro = open('fornecedores.csv', 'r')
         texto_com_erro = arquivo_erro.read()
         arquivo_erro.close()
@@ -103,12 +133,3 @@ class Fornecedor:
         arquivo_novo = open('fornecedores.csv', 'w')
         arquivo_novo.write('')
         arquivo_novo.close()
-
-class Lista:
-
-    def __init__(self, nome, fornecedores):
-        self.nome = nome
-        self.fornecedores = fornecedores
-
-    def __getitem__(self, item):
-        return self.fornecedores[item]

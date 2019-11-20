@@ -1,5 +1,6 @@
 from fornecedor import *
 import re
+import csv
 
 def menu_de_escolha():
     escolha = input("""Você deseja:
@@ -11,7 +12,7 @@ def menu_de_escolha():
     return escolha
 
 def mensagem_entrada_cliente(nome):
-    print(f'Bem-vindo {nome}! Nosso programa te mostra os pontos de descarte mais próximos de você!')
+    print(f'Bem-vindo {nome.title()}! Nosso programa te mostra os pontos de descarte mais próximos de você!')
     print('Nós cobrimos as regiões do Swift, Taquaral, Barão Geraldo, Vila Industrial, Campo Grande e Centro!')
 
 def cria_lista_fornecedores(arquivo):
@@ -48,6 +49,7 @@ while(escolha != "0"):
             Fornecedor.listar_filtrado(Fornecedor, bairro)
             print('Deseja procurar outra região?')
             escolha = input("""\n- [1] SIM
+                               \n- [2] VOLTAR
                                \n- [0] FECHAR >>> """)
     elif escolha == "2":
         novo = input("""Você é fornecedor novo? 
@@ -56,7 +58,7 @@ while(escolha != "0"):
         if novo == "Y" or novo == 'y':
             Fornecedor.adiciona(Fornecedor)
         else:
-            Fornecedor.altera_cadastro(Fornecedor)
+            Fornecedor.altera_cadastro(Fornecedor, Fornecedor.lista_de_fornecedores)
     elif escolha == "3":
         print('Acessando como admin...')
         escolha_do_adm = input("""Você deseja 
@@ -68,7 +70,7 @@ while(escolha != "0"):
         elif escolha_do_adm == "2":
             Fornecedor.adiciona(Fornecedor)
         elif escolha_do_adm == "3":
-            Fornecedor.remove()
+            Fornecedor.remove(Fornecedor, Fornecedor.lista_de_fornecedores)
         else:
             continue
 
