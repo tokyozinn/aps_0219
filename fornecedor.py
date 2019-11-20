@@ -120,7 +120,7 @@ class Fornecedor:
             i += 1    
             continue
 
-    def limpa_arquivo(cls, nome_arquivo):
+    def limpa_arquivo(self, nome_arquivo):
 
         arquivo_erro = open('fornecedores.csv', 'r')
         texto_com_erro = arquivo_erro.read()
